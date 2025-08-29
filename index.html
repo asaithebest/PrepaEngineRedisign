@@ -71,33 +71,13 @@
             element.style.animationDuration = (Math.random() * 12 + 10) + 's';
             element.style.animationDelay = (Math.random() * 3) + 's';
             
-            const colorVariations = [
-                'rgba(255, 255, 255, 0.12)',
-                'rgba(59, 130, 246, 0.15)',
-                'rgba(147, 51, 234, 0.12)',
-                'rgba(244, 63, 94, 0.10)',
-                'rgba(16, 185, 129, 0.10)'
-            ];
-            element.style.color = colorVariations[Math.floor(Math.random() * colorVariations.length)];
+            element.style.color = 'rgba(255, 255, 255, 0.15)';
             
             return element;
         }
         
         function initializeAnimations() {
             const container = document.getElementById('mathAnimations');
-            
-            for (let i = 0; i < 50; i++) {
-                const staticSymbol = document.createElement('div');
-                staticSymbol.className = 'math-symbol';
-                staticSymbol.textContent = mathSymbols[Math.floor(Math.random() * mathSymbols.length)];
-                staticSymbol.style.left = Math.random() * 100 + 'vw';
-                staticSymbol.style.top = Math.random() * 100 + 'vh';
-                staticSymbol.style.fontSize = (Math.random() * 35 + 20) + 'px';
-                staticSymbol.style.opacity = '0';
-                staticSymbol.style.color = 'rgba(255, 255, 255, 0.05)';
-                staticSymbol.style.animation = 'none';
-                container.appendChild(staticSymbol);
-            }
             
             for (let i = 0; i < 150; i++) {
                 setTimeout(() => {
