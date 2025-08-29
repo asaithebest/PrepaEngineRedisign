@@ -1,0 +1,402 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PrepaEngine</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Inter', sans-serif;
+            min-height: 100vh;
+            background: linear-gradient(135deg, #2d1b5e 0%, #3b2266 25%, #4a2a7a 50%, #3b2266 75%, #2d1b5e 100%);
+            overflow: hidden;
+            position: relative;
+        }
+        
+        .container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            position: relative;
+            z-index: 10;
+            padding: 20px;
+        }
+        
+        .title {
+            font-size: clamp(60px, 12vw, 120px);
+            font-weight: 800;
+            margin-bottom: 60px;
+            letter-spacing: -2px;
+        }
+        
+        .title-prepa {
+            background: linear-gradient(135deg, #3b82f6 0%, #60a5fa 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            filter: drop-shadow(0 6px 12px rgba(59, 130, 246, 0.4));
+        }
+        
+        .title-engine {
+            color: white;
+            filter: drop-shadow(0 6px 12px rgba(0, 0, 0, 0.4));
+        }
+        
+        .search-container {
+            width: 100%;
+            max-width: 600px;
+            margin-bottom: 40px;
+        }
+        
+        .search-form {
+            position: relative;
+            width: 100%;
+        }
+        
+        .search-input {
+            width: 100%;
+            padding: 20px 24px;
+            padding-right: 60px;
+            font-size: 18px;
+            color: white;
+            background: transparent;
+            border: none;
+            border-bottom: 2px solid rgba(255, 255, 255, 0.2);
+            outline: none;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        
+        .search-input::placeholder {
+            color: rgba(255, 255, 255, 0.5);
+        }
+        
+        .search-input:focus {
+            border-bottom-color: #3b82f6;
+            box-shadow: 0 2px 8px rgba(59, 130, 246, 0.3);
+        }
+        
+        .search-icon {
+            position: absolute;
+            right: 20px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: rgba(255, 255, 255, 0.6);
+            pointer-events: none;
+        }
+        
+        .version-badge {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: rgba(255, 255, 255, 0.06);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 25px;
+            padding: 12px 24px;
+            font-size: 14px;
+            color: rgba(255, 255, 255, 0.7);
+            font-weight: 400;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            z-index: 20;
+        }
+        
+        .math-animations {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            pointer-events: none;
+            z-index: 1;
+            overflow: hidden;
+        }
+        
+        .math-symbol {
+            position: absolute;
+            color: rgba(255, 255, 255, 0.12);
+            font-family: 'Inter', serif;
+            font-weight: 300;
+            pointer-events: none;
+            user-select: none;
+            filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.2));
+        }
+        
+        @keyframes floatUp {
+            0% {
+                transform: translateY(120vh) rotate(0deg);
+                opacity: 0;
+            }
+            5% {
+                opacity: 1;
+            }
+            95% {
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(-20vh) rotate(360deg);
+                opacity: 0;
+            }
+        }
+        
+        @keyframes floatDiagonal {
+            0% {
+                transform: translate(-15vw, 120vh) rotate(0deg);
+                opacity: 0;
+            }
+            5% {
+                opacity: 0.8;
+            }
+            95% {
+                opacity: 0.8;
+            }
+            100% {
+                transform: translate(115vw, -20vh) rotate(360deg);
+                opacity: 0;
+            }
+        }
+        
+        @keyframes floatHorizontal {
+            0% {
+                transform: translateX(-15vw) rotate(0deg);
+                opacity: 0;
+            }
+            5% {
+                opacity: 0.6;
+            }
+            95% {
+                opacity: 0.6;
+            }
+            100% {
+                transform: translateX(115vw) rotate(360deg);
+                opacity: 0;
+            }
+        }
+        
+        @keyframes floatCircular {
+            0% {
+                transform: translate(-10vw, 50vh) rotate(0deg);
+                opacity: 0;
+            }
+            10% {
+                opacity: 0.7;
+                transform: translate(10vw, 30vh) rotate(45deg);
+            }
+            25% {
+                transform: translate(50vw, 10vh) rotate(90deg);
+            }
+            50% {
+                transform: translate(90vw, 30vh) rotate(180deg);
+            }
+            75% {
+                transform: translate(70vw, 70vh) rotate(270deg);
+            }
+            90% {
+                opacity: 0.7;
+                transform: translate(30vw, 90vh) rotate(315deg);
+            }
+            100% {
+                transform: translate(-10vw, 110vh) rotate(360deg);
+                opacity: 0;
+            }
+        }
+        
+        @keyframes floatSpiral {
+            0% {
+                transform: translate(50vw, 120vh) rotate(0deg) scale(0.5);
+                opacity: 0;
+            }
+            10% {
+                opacity: 0.8;
+            }
+            25% {
+                transform: translate(30vw, 80vh) rotate(90deg) scale(0.8);
+            }
+            50% {
+                transform: translate(70vw, 40vh) rotate(180deg) scale(1.2);
+            }
+            75% {
+                transform: translate(20vw, 20vh) rotate(270deg) scale(0.9);
+            }
+            90% {
+                opacity: 0.8;
+            }
+            100% {
+                transform: translate(50vw, -20vh) rotate(360deg) scale(0.3);
+                opacity: 0;
+            }
+        }
+        
+        .float-up { animation: floatUp linear infinite; }
+        .float-diagonal { animation: floatDiagonal linear infinite; }
+        .float-horizontal { animation: floatHorizontal linear infinite; }
+        .float-circular { animation: floatCircular linear infinite; }
+        .float-spiral { animation: floatSpiral linear infinite; }
+        
+        @media (max-width: 768px) {
+            .container {
+                padding: 16px;
+            }
+            
+            .search-container {
+                padding: 24px;
+                margin-bottom: 32px;
+            }
+            
+            .search-input {
+                padding: 16px 20px;
+                padding-right: 50px;
+                font-size: 16px;
+            }
+            
+            .title {
+                margin-bottom: 48px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="math-animations" id="mathAnimations"></div>
+    
+    <div class="container">
+        <h1 class="title">
+            <span class="title-prepa">Prepa</span><span class="title-engine">Engine</span>
+        </h1>
+        
+        <div class="search-container">
+            <form class="search-form" onsubmit="return false;">
+                <input 
+                    type="text" 
+                    class="search-input" 
+                    placeholder="Search..."
+                    oninput="console.log('Recherche:', this.value)"
+                />
+                <div class="search-icon">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <circle cx="11" cy="11" r="8"></circle>
+                        <path d="m21 21-4.35-4.35"></path>
+                    </svg>
+                </div>
+            </form>
+        </div>
+        
+        <div class="version-badge">
+            PrepaEngine v1.1.7
+        </div>
+    </div>
+
+    <script>
+        const mathSymbols = [
+            '∫', '∑', '∏', '∆', '∇', '∂', '∞', 'π', 'θ', 'φ', 'ψ', 'ω', 'α', 'β', 'γ', 'δ', 'ε', 'ζ', 'η', 'κ', 'λ', 'μ', 'ν', 'ξ', 'ρ', 'σ', 'τ', 'υ', 'χ',
+            '≈', '≡', '≠', '≤', '≥', '±', '∓', '×', '÷', '√', '∛', '∜', '∝', '∠', '∟', '⊥', '∥', '∦', '⟂', '⊕', '⊗', '⊙',
+            'sin', 'cos', 'tan', 'cot', 'sec', 'csc', 'sinh', 'cosh', 'tanh', 'log', 'ln', 'exp', 'lim', 'max', 'min', 'sup', 'inf',
+            '∈', '∉', '⊂', '⊃', '⊆', '⊇', '∪', '∩', '∅', '∀', '∃', '∄', '⊢', '⊨', '⊤', '⊥',
+            '²', '³', '⁴', '⁵', '⁶', '⁷', '⁸', '⁹', 'ⁿ', '₀', '₁', '₂', '₃', '₄', '₅', '₆', '₇', '₈', '₉', 'ₓ', 'ₙ', 'ₘ', 'ᵢ', 'ⱼ', 'ₖ',
+            'f(x)', 'g(x)', 'h(x)', 'F(x)', 'G(x)', 'H(x)', 'y=mx+b', 'ax²+bx+c', 'y=x²', 'y=x³', 'e^x', 'e^(ix)', 'x!', '|x|', '||x||', '⌊x⌋', '⌈x⌉',
+            'dx', 'dy', 'dt', 'dr', 'dθ', 'dφ', 'du', 'dv', 'dw', 'ds', 'dA', 'dV', 'df', 'dg',
+            '∮', '∬', '∭', '∯', '∰', '∱', '∲', '∳',
+            'ℝ', 'ℂ', 'ℕ', 'ℤ', 'ℚ', 'ℙ', '𝔸', '𝔹', '𝔼', '𝔽', '𝔾', 'ℍ', '𝕀', '𝕁', '𝕂', 'ℒ', '𝕄', '𝕆', '𝕊', '𝕋', '𝕌', '𝕍', '𝕎', '𝔾',
+            '→', '←', '↑', '↓', '↔', '↕', '⇒', '⇐', '⇑', '⇓', '⇔', '⇕', '↗', '↘', '↙', '↖', '⟶', '⟵', '⟷',
+            '◯', '△', '□', '◇', '◈', '◉', '◎', '●', '■', '▲', '▼', '◀', '▶', '★', '☆', '♠', '♣', '♥', '♦',
+            '-', '+', '=', '≠', '~', '≈', '/', '\\', '|', '¦', '∴', '∵', '∶', '∷', '∺', '∻', '∼', '∽', '∾', '∿'
+        ];
+        
+        const animationTypes = ['float-up', 'float-diagonal', 'float-horizontal', 'float-circular', 'float-spiral'];
+        
+        function createMathSymbol() {
+            const symbol = mathSymbols[Math.floor(Math.random() * mathSymbols.length)];
+            const animationType = animationTypes[Math.floor(Math.random() * animationTypes.length)];
+            
+            const element = document.createElement('div');
+            element.className = `math-symbol ${animationType}`;
+            element.textContent = symbol;
+            
+            const startX = Math.random() * 100;
+            const startY = animationType === 'float-horizontal' ? Math.random() * 100 : 100;
+            
+            element.style.left = startX + 'vw';
+            element.style.top = startY + 'vh';
+            element.style.fontSize = (Math.random() * 40 + 25) + 'px';
+            element.style.animationDuration = (Math.random() * 12 + 10) + 's';
+            element.style.animationDelay = (Math.random() * 3) + 's';
+            
+            const colorVariations = [
+                'rgba(255, 255, 255, 0.12)',
+                'rgba(59, 130, 246, 0.15)',
+                'rgba(147, 51, 234, 0.12)',
+                'rgba(244, 63, 94, 0.10)',
+                'rgba(16, 185, 129, 0.10)'
+            ];
+            element.style.color = colorVariations[Math.floor(Math.random() * colorVariations.length)];
+            
+            return element;
+        }
+        
+        function initializeAnimations() {
+            const container = document.getElementById('mathAnimations');
+            
+            for (let i = 0; i < 50; i++) {
+                const staticSymbol = document.createElement('div');
+                staticSymbol.className = 'math-symbol';
+                staticSymbol.textContent = mathSymbols[Math.floor(Math.random() * mathSymbols.length)];
+                staticSymbol.style.left = Math.random() * 100 + 'vw';
+                staticSymbol.style.top = Math.random() * 100 + 'vh';
+                staticSymbol.style.fontSize = (Math.random() * 35 + 20) + 'px';
+                staticSymbol.style.opacity = '0';
+                staticSymbol.style.color = 'rgba(255, 255, 255, 0.05)';
+                staticSymbol.style.animation = 'none';
+                container.appendChild(staticSymbol);
+            }
+            
+            for (let i = 0; i < 150; i++) {
+                setTimeout(() => {
+                    const symbol = createMathSymbol();
+                    container.appendChild(symbol);
+                    
+                    setTimeout(() => {
+                        if (symbol.parentNode) {
+                            symbol.parentNode.removeChild(symbol);
+                        }
+                    }, 25000);
+                }, i * 80);
+            }
+            
+            setInterval(() => {
+                const symbol = createMathSymbol();
+                container.appendChild(symbol);
+                
+                setTimeout(() => {
+                    if (symbol.parentNode) {
+                        symbol.parentNode.removeChild(symbol);
+                    }
+                }, 25000);
+            }, 150);
+        }
+        
+        document.addEventListener('DOMContentLoaded', initializeAnimations);
+        
+        document.addEventListener('mousemove', (e) => {
+            const symbols = document.querySelectorAll('.math-symbol');
+            const mouseX = e.clientX / window.innerWidth;
+            const mouseY = e.clientY / window.innerHeight;
+            
+            symbols.forEach((symbol, index) => {
+                const speed = (index % 5 + 1) * 0.5;
+                const x = (mouseX - 0.5) * speed;
+                const y = (mouseY - 0.5) * speed;
+                
+                symbol.style.transform += ` translate(${x}px, ${y}px)`;
+            });
+        });
+    </script>
+</body>
+</html>
